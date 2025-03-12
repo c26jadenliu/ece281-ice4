@@ -71,6 +71,17 @@ architecture top_basys3_arch of top_basys3 is
 
 --Declare stoplight component here 
 
+component stoplight is
+    port (
+        i_clk   : in  std_logic;
+        i_reset : in  std_logic;
+        i_C     : in  std_logic;
+        o_G     : out std_logic;
+        o_Y     : out std_logic;
+        o_R     : out std_logic
+    );
+end component stoplight;
+
 
 component clock_divider is
 	generic ( constant k_DIV : natural := 2	);
@@ -78,7 +89,7 @@ component clock_divider is
 			i_reset  : in std_logic;		   -- asynchronous
 			o_clk    : out std_logic		   -- divided (slow) clock
 	);
-end component clock_divider;
+end component clock_divider;    
 
 	signal w_clk : std_logic;		--this wire provides the connection between o_clk and stoplight clk
 
@@ -91,9 +102,18 @@ begin
 	clkdiv_inst : clock_divider 		--instantiation of clock_divider to take 
         generic map ( k_DIV => 50000000 ) -- 1 Hz clock from 100 MHz
         port map (						  
-            i_clk   => 
-            i_reset => 
-            o_clk   => 
+            i_clk   => clk,
+            i_reset => btnC,
+            o_clk   => w_clk
         );    
+    stoplight_inst : stoplight
+        port map (
+            i_clk   => w_clk,     -- use the divided clock
+            i_reset => btnC,      -- same reset signal
+            i_C     => btnL,      -- example input to FSM
+            o_G     => JA(0),     -- map outputs to JA[0..2]
+            o_Y     => JA(1),
+            o_R     => JA(2)
+      );
 	
 end top_basys3_arch;
