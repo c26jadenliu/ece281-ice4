@@ -92,8 +92,6 @@ begin
 	
 	-- PROCESSES ----------------------------------------	
 	-- state memory w/ asynchronous reset ---------------
-	register_proc : process (  )
-	begin
 			--Reset state is yellow
             --- state memory w/ asynchronous reset ---
 register_proc : process (i_clk, i_reset)
@@ -105,8 +103,6 @@ begin
     end if;
 end process register_proc;
 ---
-
-	end process register_proc;
 	-------------------------------------------------------
 	
 end stoplight_fsm_arch;
