@@ -73,14 +73,20 @@ architecture stoplight_fsm_arch of stoplight_fsm is
 	
 	-- create register signals with default state yellow (10)
     -- two bits for red green, yellow, or ghost state
-    
+    signal f_Q, f_Q_next : std_logic_vector(1 downto 0) := "10";
 begin
 	-- CONCURRENT STATEMENTS ----------------------------
 	-- Next state logic
-	
+	f_Q_next(0) <= (not f_Q(1)) and i_C;
+    f_Q_next(1) <= (not f_Q(1)) and f_Q(0) and (not i_C);
 	
 	-- Output logic, red green yellow light to determine current state
-	
+    o_G <= (not f_Q(1)) and f_Q(0);
+
+    o_Y <= f_Q(1) and (not f_Q(0));
+
+    o_R <= ((not f_Q(1)) and (not f_Q(0))) or
+         (f_Q(1) and f_Q(0));
 	
 	-------------------------------------------------------	
 	
